@@ -3,9 +3,11 @@ import { Button, Card, Container, Stack, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import polylogo from "../../../images/polygon.png";
 import { Bounty } from '../../../repositories/list-bounties'
+import { MusicNFT } from "../../../repositories/list-music-NFT";
 interface Props {
     width: number;
-    bounties: Bounty[]
+    bounties: Bounty[];
+    music: MusicNFT[];
 }
 
 
@@ -23,6 +25,7 @@ const BountyCards: React.FC<Props> = (props) => {
 
     return (
         <>
+            {props.music.map(music => <div key={music.id}>tokenURI: {music.tokenURI}</div>)}
             {props.bounties.map(bounty =>
                 <Container key={bounty.id} className={w}>
                     <Card>

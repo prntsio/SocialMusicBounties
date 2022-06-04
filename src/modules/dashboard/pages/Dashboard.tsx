@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { bounties as getBounties, Bounty } from '../../../repositories/list-bounties'
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
 import { toast } from 'react-toastify';
+import { MusicNFT, musicNFTs } from "../../../repositories/list-music-NFT";
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -99,10 +100,12 @@ const Dashboard: React.FC<Props> = () => {
         // chainId: config.chainId
       },
     )
+    const [music, setMusic] = useState<MusicNFT[]>([]);
+
     useEffect(() => {
       (async () => {
-        const bounties = await getBounties();
-        setbounties(bounties);
+        setMusic(await musicNFTs())
+        setbounties(await getBounties());
       })()
     }, [])
     useEffect(() => {
@@ -131,7 +134,7 @@ const Dashboard: React.FC<Props> = () => {
             <button onClick={() => setFinalFulfiller()}> setFinalFulfiller</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
             <button onClick={() => acceptFulfillment()}> acceptFulfillment</button>
-            <BountyCards width={50}  bounties={bounties}/>
+            <BountyCards width={50}  bounties={bounties} music={music}/>
         </>
 
     );

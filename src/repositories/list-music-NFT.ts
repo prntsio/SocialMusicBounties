@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { subgraphClient } from "../app/services/SubgraphApolloClient"
+import { subgraphClient } from "../app/services/MusicClient"
 
 const QUERY = `
 {
@@ -9,6 +9,7 @@ const QUERY = `
     owner
     tokenURI
     tokenId
+    # createdAt
   }
 }
 `;
@@ -19,18 +20,17 @@ export type MusicNFT = {
     owner: string
     tokenURI: string
     tokenId: string
+    // createdAt: string
 }
 
-const request = (sender?: string) => {
+const request = () => {
   return subgraphClient.query({
     query: gql(QUERY),
-    variables: {
-      sender,
-    },
   });
 };
 
-export const musicNFTs = async (sender?: string): Promise<MusicNFT[]> => {
-  const result = await request(sender);
+export const musicNFTs = async (): Promise<MusicNFT[]> => {
+  const result = await request();
+  console.log(result)
   return result.data.musicNFTs;
 };
