@@ -1,4 +1,3 @@
-
 import BountyCards from "../components/Cards";
 import PageTop from "../components/PageTop";
 import { useContractRead, useContractWrite } from "wagmi";
@@ -109,8 +108,6 @@ const Dashboard: React.FC<Props> = () => {
     return (
         <>
             <PageTop />
-            <button onClick={() => issueBounty()}>Issue Bounty</button>
-            <button onClick={() => contribute()}>Contribute</button>
             <button onClick={() => issueAndContribute()}> issueAndContribute</button>
             <button onClick={() => performAction()}> performAction</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
@@ -122,4 +119,3 @@ const Dashboard: React.FC<Props> = () => {
 };
 
 export default Dashboard;
-
