@@ -4,7 +4,7 @@ import { useContractRead, useContractWrite } from "wagmi";
 import config from "../../../config/config";
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
-import { bounties as getBounties, Bounty } from '../../../app/services/list-bounties'
+import { bounties as getBounties, Bounty } from '../../../repositories/list-bounties'
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
 interface Props {
     isLoggedIn: boolean;

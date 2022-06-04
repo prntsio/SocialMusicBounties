@@ -2,7 +2,6 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Cards from "../../dashboard/components/Cards";
 import UserInfo from "../components/UserInfo";
-import {cards} from '../../../data'
 
 interface Props { }
 

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import { subgraphClient } from "./SubgraphApolloClient"
+import { subgraphClient } from "../app/services/SubgraphApolloClient"
 const BOUNTIES = `
 {
   bounties {
