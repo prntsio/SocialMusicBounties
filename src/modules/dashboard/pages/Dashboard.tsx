@@ -1,4 +1,3 @@
-
 import BountyCards from "../components/Cards";
 import PageTop from "../components/PageTop";
 import { useContractRead, useContractWrite } from "wagmi";
@@ -120,4 +119,3 @@ const Dashboard: React.FC<Props> = () => {
 };
 
 export default Dashboard;
-
