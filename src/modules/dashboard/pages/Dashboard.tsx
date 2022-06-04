@@ -6,6 +6,8 @@ import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
 import { bounties as getBounties, Bounty } from '../../../repositories/list-bounties'
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
+import { mint } from "../../../utils/livepeer-mint";
+
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +35,7 @@ const Dashboard: React.FC<Props> = () => {
     const {write : issueAndContribute, data: issueAndContributeData} = useContractWrite({
       addressOrName: config.address,
       contractInterface: bountyContract,
-    },
+    }, //createClient
       "issueAndContribute",
       {
         args: [sender,[sender],[sender],JSON.stringify({
@@ -112,6 +114,7 @@ const Dashboard: React.FC<Props> = () => {
             <button onClick={() => performAction()}> performAction</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
             <button onClick={() => acceptFulfillment()}> acceptFulfillment</button>
+            <button onClick={() => mint("Test", null)}> sendSubmission</button>
             <BountyCards width={50}  bounties={bounties}/>
         </>
 
