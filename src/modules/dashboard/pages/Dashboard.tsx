@@ -109,8 +109,6 @@ const Dashboard: React.FC<Props> = () => {
     return (
         <>
             <PageTop />
-            <button onClick={() => issueBounty()}>Issue Bounty</button>
-            <button onClick={() => contribute()}>Contribute</button>
             <button onClick={() => issueAndContribute()}> issueAndContribute</button>
             <button onClick={() => performAction()}> performAction</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
