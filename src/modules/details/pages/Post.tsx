@@ -5,12 +5,15 @@ import polylogo from "../../../images/polygon.png";
 import Loading from "../../../shared/Loading";
 import { bounty as getBounty } from '../../../repositories/get-bounty'
 import { Bounty } from "../../../repositories/list-bounties";
+import { performedActions as getPerformedActions } from '../../../repositories/list-bounty-performed-actions'
+import { PerformedAction } from '../../../repositories/list-performed-actions'
 
 interface Props { }
 
 const Post: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
   const [bounty, setBounty] = useState<Bounty>();
+  const [performedActions, setPerformedActions] = useState<PerformedAction[]>();
   const [loaded, setLoaded] = useState(false)
   const isOwner = false
   const isApproved = false
@@ -20,9 +23,10 @@ const Post: React.FC<Props> = (props: Props) => {
     (async () => {
       if (id) {
         const bounty = await getBounty(id);
-        console.log(bounty);
-        setLoaded(true)
+        const performedActions = await getPerformedActions(id)
+        setPerformedActions(performedActions)
         setBounty(bounty)
+        setLoaded(true)
       }
     })()
   }, [id])

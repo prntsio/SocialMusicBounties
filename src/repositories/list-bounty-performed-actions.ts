@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core';
 import { subgraphClient } from "../app/services/SubgraphApolloClient"
-import { PerformedActions } from './list-performed-actions';
+import { PerformedAction } from './list-performed-actions';
 
 const QUERY = `
 query GetPerformedActions($bountyId: String!) {
@@ -26,7 +26,7 @@ const request = (bountyId?: string) => {
   });
 };
 
-export const performedActions = async (bountyId?: string): Promise<PerformedActions[]> => {
+export const performedActions = async (bountyId?: string): Promise<PerformedAction[]> => {
   const result = await request(bountyId);
   return result.data.performedActions;
 };

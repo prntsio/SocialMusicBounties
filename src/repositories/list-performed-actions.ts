@@ -16,7 +16,7 @@ const QUERY = `
   }
 `;
 
-export type PerformedActions = {
+export type PerformedAction = {
     id: string
     bountyId: string
     sender: string
@@ -36,7 +36,7 @@ const request = (sender?: string) => {
   });
 };
 
-export const performedActions = async (sender?: string): Promise<PerformedActions[]> => {
+export const performedActions = async (sender?: string): Promise<PerformedAction[]> => {
   const result = await request(sender);
   return result.data.performedActions;
 };
