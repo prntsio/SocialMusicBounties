@@ -2,7 +2,7 @@ import { gql } from '@apollo/client/core';
 import { subgraphClient } from "../app/services/SubgraphApolloClient"
 import { Bounty } from './list-bounties';
 
-const BOUNTIES = `
+const QUERY = `
 query GetBounties($sender: String!) {
   bounties(where: {sender: $sender} ) {
     id
@@ -24,13 +24,14 @@ query GetBounties($sender: String!) {
     fulfillmentId
     fulfillers
     finalFulfiller
+    createdAt
   }
 }
 `;
 
 const getTimelineRequest = (sender?: string) => {
   return subgraphClient.query({
-    query: gql(BOUNTIES),
+    query: gql(QUERY),
     variables: {
       sender,
     },
