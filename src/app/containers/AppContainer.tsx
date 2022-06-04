@@ -26,7 +26,7 @@ const AppContainer: React.FC<Props> = (props: Props) => {
   const renderContainer = () => (
     <WagmiConfig client={client}>
       <BrowserRouter>
-        <Header setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+        <Header/>
         <Routes>
           <Route path="/" element={<Dashboard setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />} />
 
