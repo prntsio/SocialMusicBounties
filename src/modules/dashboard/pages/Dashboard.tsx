@@ -38,7 +38,7 @@ const Dashboard: React.FC<Props> = () => {
       "issueAndContribute",
       {
         args: [sender,[sender],[sender],JSON.stringify({
-          title: 'Brazilian Musicv2', 
+          title: 'Brazilian Musicv3', 
           type: 'Feature', 
           nftHash: 'fakeHash', 
           contributersType: 'one', 
@@ -57,7 +57,7 @@ const Dashboard: React.FC<Props> = () => {
       },
     )
     // applicant notifies sender that they are available
-    const {write : performAction, data: performActionData} = useContractWrite({
+    const {write : addFulfiller, data: addFulfillerData} = useContractWrite({
       addressOrName: config.address,
       contractInterface: bountyContract,
     },
@@ -127,7 +127,8 @@ const Dashboard: React.FC<Props> = () => {
         <>
             <PageTop />
             <button onClick={() => issueAndContribute()}> issueAndContribute</button>
-            <button onClick={() => performAction()}> performAction</button>
+            <button onClick={() => addFulfiller()}> addFulfiller</button>
+            <button onClick={() => setFinalFulfiller()}> setFinalFulfiller</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
             <button onClick={() => acceptFulfillment()}> acceptFulfillment</button>
             <BountyCards width={50}  bounties={bounties}/>

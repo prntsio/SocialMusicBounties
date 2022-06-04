@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Image, Stack } from "react-bootstrap";
 import polylogo from "../../../images/polygon.png";
 import { signedTypeData, getAddressFromSigner, splitSignature } from '../../../app/services/ethers-service';
@@ -8,8 +8,15 @@ import { getAddress } from '../../../app/services/ethers-service'
 import { getProfiles } from '../../../app/services/LensQueries'
 //import { pinFileToIPFS, pinataApiKey, pinataSecretApiKey } from "../../../utils/pinata-ipfs";
 import {addToIPFS} from '../../../utils/ipfs'
+import { ethers } from "ethers";
+import { useContractWrite, useAccount, useWaitForTransaction } from "wagmi";
+import config from '../../../config/config'
+import bountyContract from '../../../abis/TestContract.json'
+import { toast } from "react-toastify"
+ 
+import { useNavigate } from "react-router-dom";
 
-export const createPost = async () => {
+export const createPostLens = async () => {
     console.log("Create POSt");
     
     let address = await getAddress()
@@ -61,38 +68,92 @@ export const createPost = async () => {
 }
 
 const CreateBounty: React.FC<Props> = (props: Props) => {
-    const [title, setTitle] = useState("");
-    const [bountyType, setBountyType] = useState();
-    const [file, setFile] = useState();
-    const [hash, setHash] = useState();
-    const [contributers, setContributers] = useState();
-    const [requirementSpotify, setRequirementsSpotify] = useState();
-    const [requirementsIG, setRequirementsIG] = useState();
-    const [email, setEmail] = useState();
-    const [bountyDescription, setBountyDescription] = useState();
-    const [estimatedTime, setEstimatedTime] = useState();
-    const [featureBounty, setFeatureBounty] = useState();
-    const [bountyPrice, setBountyPrice] = useState();
-    const [paymentDue, setPaymentDue] = useState();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [bountyType, setBountyType] = useState();
+  const [file, setFile] = useState();
+  const [hash, setHash] = useState();
+  const [contributers, setContributers] = useState();
+  const [requirementSpotify, setRequirementsSpotify] = useState();
+  const [requirementsIG, setRequirementsIG] = useState();
+  const [email, setEmail] = useState();
+  const [bountyDescription, setBountyDescription] = useState();
+  const [estimatedTime, setEstimatedTime] = useState();
+  const [featureBounty, setFeatureBounty] = useState();
+  const [bountyPrice, setBountyPrice] = useState();
+  const [paymentDue, setPaymentDue] = useState();
+  const { data, isError, isLoading } = useAccount();
+  
+  const {write : issueAndContribute, data: issueAndContributeData} = useContractWrite({
+    addressOrName: config.address,
+    contractInterface: bountyContract,
+  },
+  "issueAndContribute",
+  )
+  const {data: waitData, wait} = useWaitForTransaction((() => {
+    console.log(issueAndContributeData)
+    return {
+      chainId: config.chainId,
+      hash: issueAndContributeData?.hash,
+      confirmations: 1,
+      wait: issueAndContributeData?.wait
+    }
+  })());
+  useEffect(() => {
+    if (!issueAndContributeData || !waitData) return;
+    console.log(waitData)
+    toast.dismiss();
+    toast.success('Transaction is successful! Waiting for indexing');
+    navigate(`../profile`)
+  },[issueAndContributeData, waitData])
+  const handleSubmit = async () => {
+    console.log(data)
+    const res = await addToIPFS(file)
+    console.log(res)
+    console.log({
+      "title": title,
+      "file": file,
+      "bountyType": bountyType,
+      "contributers": contributers,
+      "requirementSpotify": requirementSpotify,
+      "requirementsIG": requirementsIG,
+      "email": email,
+      "bountyDescription": bountyDescription,
+      "estimatedTime": estimatedTime,
+      "featureBounty": featureBounty,
+      "bountyPrice": bountyPrice,
+      "paymentDue": paymentDue,
+      "nftHash": res.path,
+      "fileHash": res.path
+    });
+    if (!data) {
+      toast.error('connect your wallet')
+      return;
+    }
+    issueAndContribute({
+      args: [data.address,[data.address],[data.address],JSON.stringify({
+        title: title, 
+        type: bountyType, 
+        nftHash: res.path, //replace with null when fileHash is working 
+        fileHash: res.path,
+        contributersType: contributers, 
+        spotifyPlays: requirementSpotify, 
+        instagramFollowers: requirementsIG, 
+        email: email, 
+        description :bountyDescription, 
+        estimatedTime:estimatedTime, 
+        bountyPrice: bountyPrice, //bountyPrice doesn't
+        paymentDue: paymentDue
+      }),2528821098,"0x0000000000000000000000000000000000000000",0,ethers.utils.parseEther(bountyPrice)],
+      overrides: {
+        value: ethers.utils.parseEther(bountyPrice)
+      }
+      // chainId: config.chainId
+    })
+    toast.loading('Awaiting transaction to complete')
     
-    const handleSubmit = async () => {
-        // console.log(
-        //     "title", title,
-        //     "file", file,
-        //     "bountyType", bountyType,
-        //     "contributers", contributers,
-        //     "requirementSpotify", requirementSpotify,
-        //     "requirementsIG", requirementsIG,
-        //     "email", email,
-        //     "bountyDescription", bountyDescription,
-        //     "estimatedTime", estimatedTime,
-        //     "featureBounty", featureBounty,
-        //     "bountyPrice", bountyPrice,
-        //     "paymentDue", paymentDue,
-        // );
-        await addToIPFS(file).then(console.log) //TODO: mapping fileHash to post and writing to contract to issueAndContribute
-        createPost();
-
+        //createPostLens();
+        
     }
 
     return (
@@ -187,10 +248,10 @@ const CreateBounty: React.FC<Props> = (props: Props) => {
                         Requirements:
                     </Form.Label>
                     <Col sm={4}>
-                        <Form.Control type="text" placeholder="Spotify Plays..." onChange={(e) => setRequirementsSpotify(e.target.value)} />
+                        <Form.Control type="text" placeholder="Spotify Plays..." type="number" onChange={(e) => setRequirementsSpotify(e.target.value)} />
                     </Col>
                     <Col sm={4}>
-                        <Form.Control type="text" placeholder="Instagram followers..." onChange={(e) => setRequirementsIG(e.target.value)} />
+                        <Form.Control type="text" placeholder="Instagram followers..." type="number" onChange={(e) => setRequirementsIG(e.target.value)} />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
@@ -259,11 +320,11 @@ const CreateBounty: React.FC<Props> = (props: Props) => {
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
                     <Form.Label column sm={3}>
-                        Payment Due:
+                        Deadline:
                     </Form.Label>
                     <Col sm={5}>
                         <Stack direction="horizontal" gap={2}>
-                            <Form.Control className="align-items-end" type="number" placeholder="Price in Matic..." onChange={(e) => setPaymentDue(e.target.value)} /> <Image src={polylogo} />
+                            <Form.Control className="align-items-end" type="number" placeholder="Number of days" onChange={(e) => setPaymentDue(e.target.value)} />
                         </Stack>
                     </Col>
                 </Form.Group>
@@ -272,7 +333,10 @@ const CreateBounty: React.FC<Props> = (props: Props) => {
                 <Container>
                     <Form.Group as={Row} className="justify-content-end mb-3">
                         <Col sm={{ span: 4 }}>
-                            <Button onClick={() => handleSubmit()} type="submit">Create Bounty</Button>
+                            <Button onClick={async (e) => {
+                              e.preventDefault();
+                              await handleSubmit(); 
+                              }} type="submit">Create Bounty</Button>
                         </Col>
                     </Form.Group>
                 </Container>
