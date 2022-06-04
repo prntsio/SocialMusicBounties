@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 import { bounties as getBounties, Bounty } from '../../../repositories/list-bounties'
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
 import { mint } from "../../../utils/livepeer-mint";
-
+import { toast } from 'react-toastify';
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -105,6 +105,23 @@ const Dashboard: React.FC<Props> = () => {
         const bounties = await getBounties();
         setbounties(bounties);
       })()
+    }, [])
+    useEffect(() => {
+      const provider = (window as any).ethereum
+      if (!provider) {
+        alert("Metamask is not installed, please install!")
+      } else {
+        const chainId = provider.request({ method: "eth_chainId" });
+        const testChainId = '0x13881'
+        if (chainId !== testChainId) {
+          try {
+            provider.request({method: 'wallet_switchEthereumChain', params: [{ chainId: testChainId}]});
+          } catch (switchError) {
+            toast.dismiss()
+            toast.error("Failed to switch to the network");
+          }
+        }
+      }
     }, [])
     
     return (
