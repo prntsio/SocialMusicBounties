@@ -1,12 +1,12 @@
-
 import BountyCards from "../components/Cards";
 import PageTop from "../components/PageTop";
 import { useContractRead, useContractWrite } from "wagmi";
 import config from "../../../config/config";
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
-import { bounties as getBounties, Bounty } from '../../../app/services/list-bounties'
+import { bounties as getBounties, Bounty } from '../../../repositories/list-bounties'
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
+import { toast } from 'react-toastify';
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -105,6 +105,23 @@ const Dashboard: React.FC<Props> = () => {
         setbounties(bounties);
       })()
     }, [])
+    useEffect(() => {
+      const provider = (window as any).ethereum
+      if (!provider) {
+        alert("Metamask is not installed, please install!")
+      } else {
+        const chainId = provider.request({ method: "eth_chainId" });
+        const testChainId = '0x13881'
+        if (chainId !== testChainId) {
+          try {
+            provider.request({method: 'wallet_switchEthereumChain', params: [{ chainId: testChainId}]});
+          } catch (switchError) {
+            toast.dismiss()
+            toast.error("Failed to switch to the network");
+          }
+        }
+      }
+    }, [])
     
     return (
         <>
@@ -121,4 +138,3 @@ const Dashboard: React.FC<Props> = () => {
 };
 
 export default Dashboard;
-

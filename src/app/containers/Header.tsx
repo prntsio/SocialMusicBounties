@@ -4,50 +4,58 @@ import { Button, Container,  Navbar, Stack } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { authLens } from '../../modules/auth/services/Auth'
 
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import {
+    useAccount,
+    useConnect,
+    useDisconnect,
+    useEnsAvatar,
+    useEnsName,
+  } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+interface Props {}
 
 function Profile() {
-  const { data } = useAccount()
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  })
+  const { data: account } = useAccount()
+  const { connect, connectors, error, isConnecting, pendingConnector } =
+  useConnect()
   const { disconnect } = useDisconnect()
+  const { data: ensName } = useEnsName({ address: account?.address })
 
-  if (data)
+  if (account) {
     return (
       <div>
-        Connected to {data.address}
-        <button onClick={() => disconnect()}>Disconnect</button>
+        
+        <Link to="/profile">
+        <div>
+          {ensName ? `${ensName} (${account.address})` : account.address}
+        </div>
+        </Link>
+        <button onClick={() => disconnect}>Disconnect</button>
       </div>
     )
-  return <button onClick={() => connect()}>Connect Wallet</button>
+  }
+return (
+    <div>
+      {connectors.map((connector) => (
+        <button
+          disabled={!connector.ready}
+          key={connector.id}
+          onClick={() => connect(connector)}
+        >
+          {connector.name}
+          {!connector.ready && ' (unsupported)'}
+          {isConnecting &&
+            connector.id === pendingConnector?.id &&
+            ' (connecting)'}
+        </button>
+      ))}
+      {error && <div>{error.message}</div>}
+    </div>
+  )
 }
 
-interface Props {
-    isLoggedIn: boolean;
-    setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}
 
-
-
-const Header: React.FC<Props> = (props: Props) => {
-    const [address, setAddress] = useState("");
-    
-    const login = async () => {
-        let connectedAccount = await authLens();
-        let account = connectedAccount
-        setAddress(account);
-        props.setIsLoggedIn(!props.isLoggedIn)
-    }
-   
-
-
-    const logout = () => {
-        props.setIsLoggedIn(!props.isLoggedIn);
-    }
-
-
+const Header: React.FC<Props> = () => {
     const renderContainer = () => (
         <>
             <Navbar bg="dark" variant="dark">
@@ -67,30 +75,6 @@ const Header: React.FC<Props> = (props: Props) => {
                             Bounties
                         </Navbar.Brand>
                     </Link>
-
-                    {!props.isLoggedIn
-                        ? <Stack direction="horizontal" gap={2}>
-                            <Link to="/signUp">
-                                <Button className="m">Claim Profile</Button>
-                            </Link>
-
-                                <Button onClick={() => login()} className="m">SignIn</Button>
-
-                        </Stack>
-
-                        : <Stack direction="horizontal" gap={2}>
-                            <Link to="/signUp">
-                                <Button className="m">Claim Profile</Button>
-                            </Link>
-                            <Link to="/profile">
-                                <Button className="m">{address.substring(0, 6) + '...' + address.substring(address.length - 4)}</Button>
-                            </Link>
-                            <Link to='/'>
-                                <Button onClick={() => logout()}> Sign out</Button>
-                            </Link>
-                        </Stack>
-                    }
-
                     <Profile />
 
                 </Container>

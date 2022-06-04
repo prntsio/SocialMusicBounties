@@ -1,40 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { cards, User } from "../../../data";
 import polylogo from "../../../images/polygon.png";
 import Loading from "../../../shared/Loading";
+import { bounty as getBounty } from '../../../repositories/get-bounty'
+import { Bounty } from "../../../repositories/list-bounties";
+
 interface Props { }
 
 const Post: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
-  const [card, setCard] = useState<User>();
+  const [bounty, setBounty] = useState<Bounty>();
   const [loaded, setLoaded] = useState(false)
   const isOwner = false
   const isApproved = false
   const isCompletePayment = false
-  const approver = 'address here'
-  useEffect(() => {
-    if (id) {
-      setCard(cards[parseInt(id)])
-    }
-  }, [id])
 
-  //loaded
   useEffect(() => {
-    if (!card) return;
-    setLoaded(true)
-    console.log(card)
-  }, [card])
+    (async () => {
+      if (id) {
+        const bounty = await getBounty(id);
+        console.log(bounty);
+        setLoaded(true)
+        setBounty(bounty)
+      }
+    })()
+  }, [id])
 
   if (!loaded) return <Loading />
   
   return (
     <Container>
-      {card && <>
+      {bounty && <>
       <p></p>
-      <h1>{card.title} Beat Bounty</h1>
-      <p>Owned By <span style={{color: "#11BB99"}}>{card.user}</span></p>
+      <h1>{bounty.title}</h1>
+      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.sender}</span></p>
       <div style={{paddingLeft: 50}}>
       <Row>
           <Col>
@@ -49,11 +49,11 @@ const Post: React.FC<Props> = (props: Props) => {
         <Row>
           <Col>
             <p style={{color: "#687684"}}>Current Price</p>
-            <p> <Image src={polylogo} /> {card.bounty}</p>
+            <p> <Image src={polylogo} /> {bounty.bountyPrice}</p>
           </Col>
           <Col>
             <p style={{color: "#687684"}}>Bounty Description</p>
-            <p>{card.content}</p>
+            <p>{bounty.description}</p>
           </Col>
         </Row>
         {isOwner ? <>

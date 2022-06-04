@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Card, Container, Stack, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import polylogo from "../../../images/polygon.png";
-import { Bounty } from '../../../app/services/list-bounties'
+import { Bounty } from '../../../repositories/list-bounties'
 interface Props {
     width: number;
     bounties: Bounty[]
