@@ -23,7 +23,7 @@ export async function upload (file, owner) {
 
 
 // file is optional, will open a file picker if not provided.
-export async function mintNft(file) {
+export async function mintNft(file, owner) {
   console.log('asdf')
   let asset = await minter.api.createAsset('My NFT', file, (progress => {
     console.log(progress)
@@ -112,7 +112,8 @@ async function mintNft() {
   });
   console.log('exported to ipfs: ')
   console.log(ipfs)
-  const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl, config.address, config.owner);
+  return ipfs //todo
+  const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl, config.nftAddress, owner);
   console.log('minted nft')
   const nftInfo = await minter.web3.getMintedNftInfo(tx);
   console.log(`minted NFT on contract ${nftInfo.contractAddress} with ID ${nftInfo.tokenId}`);

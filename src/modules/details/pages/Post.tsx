@@ -13,6 +13,8 @@ import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
 import { mintNft, upload } from "../../../utils/livepeer";
 import { formatDistance, format } from "date-fns"
+import { toast } from "react-toastify";
+import axios from "axios";
 
 interface Props { }
 
@@ -20,17 +22,33 @@ const Post: React.FC<Props> = (props: Props) => {
   const { id : bountyId } = useParams();
   const [bounty, setBounty] = useState<Bounty>();
   const [performedActions, setPerformedActions] = useState<PerformedAction[]>();
+  const [finalFulfiller1, setFinalFulfiller1] = useState<string>();
   const [loaded, setLoaded] = useState(false)
+  const [nftHash, setNftHash] = useState<string>('');
   const { data: account} = useAccount();
   const sender = bounty && bounty.sender || '';
   const isOwner = (account && account.address?.toLowerCase()) === (bounty && bounty.sender.toLowerCase())
-  const isCompletePayment = false
+  const isCompletePayment = bounty && bounty.nftHash
+  const [video, setVideo] = useState<string>('');
+  useEffect(() => {
+    if (!(bounty && bounty.nftHash)) return;
+    axios.get(bounty?.nftHash).then(res => {
+      setVideo(res.data.external_url)
+    })
+  }, [isCompletePayment])
   useEffect(() => {
     (async () => {
       if (bountyId) {
         const bounty = await getBounty(bountyId);
         const performedActions = await getPerformedActions(bountyId)
-        setPerformedActions(performedActions)
+        const f = performedActions.filter(a => a.mode == 'setfinalFulfiller')
+        // console.log(bounty)
+        setPerformedActions(performedActions.filter(a => a.mode))
+        if (f.length === 0) {
+        } else if (f[0]){
+          const a : any = f[0]
+          setFinalFulfiller1(a.finalFulfiller)
+        }
         setBounty(bounty)
         setLoaded(true)
       }
@@ -92,7 +110,7 @@ const Post: React.FC<Props> = (props: Props) => {
           </Col>
           <Col>
             <p style={{color: "#687684"}}>Number of Applicants</p>
-            <p>2</p>
+            <p>{performedActions?.filter(a => a.mode == 'addFulfiller').length}</p>
           </Col>
         </Row>
         <Row>
@@ -107,16 +125,66 @@ const Post: React.FC<Props> = (props: Props) => {
         </Row>
         <div> <> 
           {/* TODO: map actions with mode of setfinalFulfiller */}
-            <Button variant="primary" onClick={() => {
+            {!finalFulfiller1 && <Button variant="primary" onClick={() => {
               addFulfiller({
                 args: [account.address,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
               })
-          }}>Apply</Button>
+          }}>Apply</Button>}
           
           </> 
-          
-          { <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
-              acceptFulfillment({args: [account,bountyId,[account],"data"]})
+          {/* {console.log(<bounty className="nftHash"></bounty>)} */}
+          { !isCompletePayment ?
+          <p >You can complete payment when the approved applicant has submitted the work</p> : <>
+            <div style={{margin: 'auto'}}>
+              <hr></hr>
+              <h4>Submitted Work</h4>
+              <iframe
+              style={{
+                
+                display:'block',
+                margin: 'auto',
+                height: 720/2,
+                width: '100%',
+                
+              }}
+              src={video || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
+              allow="autoplay; encrypted-media; picture-in-picture"
+            // sandbox="allow-scripts"
+              />
+              
+            </div>
+          </>
+        }
+            {account.address?.toLowerCase() == finalFulfiller1?.toLowerCase() && <Form.Control
+                      type="file"
+                      required
+                      name="file"
+                      onChange={async (e : any) => {
+                        const file = e.target.files[0]
+                        // upload(file)
+                        try {
+                          toast.loading('Minting NFT...')
+                          const res : any = await mintNft(file)
+                          console.log(res)
+                          if (res && res.nftMetadataGatewayUrl) {
+                            toast.dismiss()
+                            toast.success('NFT minted! Submit your work.')
+                            setNftHash(res.nftMetadataGatewayUrl)
+                          }
+                          // setNftHash()
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }}
+                      style={{marginBottom: 25}}
+                  />}
+          { <Button variant="primary" disabled={account.address?.toLowerCase() != finalFulfiller1?.toLowerCase()} style={{marginLeft: 25}} onClick={() => {
+              if (!nftHash) {
+                toast.error('Please upload a mp4 file')
+                return;
+              }
+
+              fulfillBounty({args: [account.address,bountyId,[account.address],nftHash]})
             }}>Submit Work</Button>}
           {isOwner && <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
             throw 'Not Implemented'
@@ -126,12 +194,6 @@ const Post: React.FC<Props> = (props: Props) => {
         {bounty.finalFulfiller && <>
               <div>Data to be uploaded here</div>
             </>}
-        { !isCompletePayment ?
-          <p >You can complete payment when the approved applicant has submitted the work</p> : <>
-            Applicant's submitted demo here
-          </>
-        }
-
         { account != bounty.finalFulfiller ?
           <p >Awaiting person that made bounty to choose an applicant, maybe show list of applicants here</p> : <>
             <p>Show the approved applicant here</p>
@@ -139,47 +201,35 @@ const Post: React.FC<Props> = (props: Props) => {
         }
       </div>
       <p><hr/></p>
+      <h4>History</h4>
       {performedActions && performedActions.map(action => {
-        console.log(action)
-        return <div>
-          <span style={{color: "#11BB99"}}>{action.fulfiller}</span> <span>{"applied for this bounty. "}{formatDistance(new Date(), new Date(Number(bounty.createdAt) * 1000))}</span>
-          { isOwner && <> 
-            <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
-              
-              setFinalFulfiller({
-                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account.address})],
-                // chainId: config.chainId
-              })
-              throw 'Not Implemented'
-            }} >Approve</Button>
-          </>}
-        </div>
+        if (action.mode == 'addFulfiller'){
+          return <div style={{
+            marginBottom: 25
+          }}>
+            <span style={{color: "#11BB99"}}>{action.fulfiller}</span> <span>{"applied for this bounty. "}{formatDistance(new Date(), new Date(Number(action.createdAt) * 1000))}</span>
+            { isOwner && !finalFulfiller1 && <> 
+              <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
+                
+                setFinalFulfiller({
+                  args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account.address})],
+                  // chainId: config.chainId
+                })
+                throw 'Not Implemented'
+              }} >Approve</Button>
+            </>}
+          </div>
+        } else if (action.mode == 'setfinalFulfiller') {
+          return <div style={{
+            marginBottom: 25
+          }}>
+            {"Owner has choosen "}<span style={{color: "#11BB99"}}>{action.fulfiller}</span> <span>{"to fulfill the bounty. "}{formatDistance(new Date(), new Date(Number(action.createdAt) * 1000))}</span>
+          </div>
+        }
         
       })}
       </>}
-      <button onClick={() => {
-        upload()
-        //mintNft()
-      }}>mintNft</button>
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label as="legend" column sm={3}>File</Form.Label>
-        <Col>
-            <Form.Control
-                type="file"
-                required
-                name="file"
-                onChange={async (e : any) => {
-                  const file = e.target.files[0]
-                  // upload(file)
-                  try {
-                    const res = await mintNft(file)
-                  } catch (e) {
-                    console.error(e)
-                  }
-                }}
-            />
-        </Col>
-    </Form.Group>
+
     </ Container>
   );
 };
