@@ -1,0 +1,56 @@
+type Bounty @entity {
+  id: ID!
+  bountyId: BigInt
+  sender: Bytes
+  title: String
+  type: String
+  nftHash: String
+  fileHash: String
+  contributersType: String
+  spotifyPlays: String
+  instagramFollowers: String
+  email: String
+  description: String
+  estimatedTime: String
+  featureBountyType: String
+  bountyPrice: String
+  paymentDue: String
+  deadline: BigInt
+  token: Bytes
+  fulfillmentId: BigInt
+  fulfillers: String
+  finalFulfiller: String
+  createdAt: BigInt
+}
+
+type PerformedAction @entity {
+  id: ID!
+  bountyId: BigInt!
+  sender: Bytes
+  fulfiller: Bytes!
+  mode: String
+  fulfillerToAdd: String
+  finalFulfiller: String
+  createdAt: BigInt
+}
+
+type Fulfillment @entity {
+  id: ID!
+  bountyId: BigInt!
+  sender: Bytes
+  fulfillmentId: BigInt
+  approver: Bytes!
+  tokenAmounts: String
+  data: String
+  createdAt: BigInt
+}
+
+type Contribution @entity {
+  id: ID!
+  bountyId: BigInt!
+  sender: Bytes
+  contributionId: BigInt!
+  contributor: Bytes!
+  amount: BigInt!
+  createdAt: BigInt
+}

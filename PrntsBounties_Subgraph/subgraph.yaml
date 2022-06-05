@@ -1,0 +1,62 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Contract
+    network: mumbai
+    source:
+      address: "0x8E0e3C37fD7D8EAE1D928ceB343d6339e7B7B48C"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ActionPerformed
+        - BountyApproversUpdated
+        - BountyChanged
+        - BountyDataChanged
+        - BountyDeadlineChanged
+        - BountyDrained
+        - BountyFulfilled
+        - BountyIssued
+        - BountyIssuersUpdated
+        - ContributionAdded
+        - ContributionRefunded
+        - ContributionsRefunded
+        - FulfillmentAccepted
+        - FulfillmentUpdated
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: ActionPerformed(uint256,address,string)
+          handler: handleActionPerformed
+        - event: BountyApproversUpdated(uint256,address,address[])
+          handler: handleBountyApproversUpdated
+        - event: BountyChanged(uint256,address,address[],address[],string,uint256)
+          handler: handleBountyChanged
+        - event: BountyDataChanged(uint256,address,string)
+          handler: handleBountyDataChanged
+        - event: BountyDeadlineChanged(uint256,address,uint256)
+          handler: handleBountyDeadlineChanged
+        - event: BountyDrained(uint256,address,uint256[])
+          handler: handleBountyDrained
+        - event: BountyFulfilled(uint256,uint256,address[],string,address)
+          handler: handleBountyFulfilled
+        - event: BountyIssued(uint256,address,address[],address[],string,uint256,address,uint256)
+          handler: handleBountyIssued
+        - event: BountyIssuersUpdated(uint256,address,address[])
+          handler: handleBountyIssuersUpdated
+        - event: ContributionAdded(uint256,uint256,address,uint256)
+          handler: handleContributionAdded
+        - event: ContributionRefunded(uint256,uint256)
+          handler: handleContributionRefunded
+        - event: ContributionsRefunded(uint256,address,uint256[])
+          handler: handleContributionsRefunded
+        - event: FulfillmentAccepted(uint256,uint256,address,uint256[])
+          handler: handleFulfillmentAccepted
+        - event: FulfillmentUpdated(uint256,uint256,address[],string)
+          handler: handleFulfillmentUpdated
+      file: ./src/contract.ts
