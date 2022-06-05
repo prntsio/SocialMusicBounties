@@ -60,7 +60,7 @@ const BountyCards: React.FC<Props> = (props) => {
                       display:'block',
                       margin: 'auto',
                       height: 720/2,
-                      width: 1280/2,
+                      width: '100%',
                       
                     }}
                     src={("https://ipfs.io/ipfs/" + m.hash2) || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}

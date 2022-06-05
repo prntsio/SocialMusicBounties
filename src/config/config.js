@@ -3,7 +3,7 @@ const configProdTest = {
   address: '0xe1A31a270082008ed2Ee736671CFb77144Bd532a',
   chainId: 137,
   nftSubgraph: '',
-  
+
 }
 
 const configProd = {
@@ -18,4 +18,4 @@ const configTest = {
   chainId: 80001,//polygon mumbai
 }
 
-export default configProdTest
+export default configTest
