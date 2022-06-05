@@ -3,7 +3,7 @@ import { Button, Card, Container, Stack, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import polylogo from "../../../images/polygon.png";
 import { Bounty } from "../../../repositories/list-bounties";
-import { MusicNFT } from "../../../repositories/list-music-NFT";
+import { getVideoURL, MusicNFT } from "../../../repositories/list-music-NFT";
 import { formatDistance } from "date-fns";
 interface Props {
   width: number;
@@ -29,9 +29,9 @@ const BountyCards: React.FC<Props> = (props) => {
               <text style={{ color: "#11BB99" }}>{music.sender}</text>
             </Card.Header>
             <Card.Body>
-              <Card.Title>{"Music NFT minted"}</Card.Title>
+              <Card.Title>{"Music NFT minted" + getVideoURL(music.tokenURI)}</Card.Title>
               <iframe
-            src={"https://ipfs.io/" + music.tokenURI.replace("ipfs://", "")}
+            src={"https://ipfs.io/ipfs/" + music.tokenURI.replace("ipfs://", "")}
             allow="autoplay; encrypted-media; picture-in-picture"
             sandbox="allow-scripts"
           ></iframe>

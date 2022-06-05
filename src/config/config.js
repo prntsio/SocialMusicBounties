@@ -1,4 +1,3 @@
-export default configTest
 export const configProd = {
   rpcUrl: ''
 }
@@ -8,3 +7,5 @@ const configTest = {
   address: '0x8E0e3C37fD7D8EAE1D928ceB343d6339e7B7B48C',
   chainId: 80001,//polygon mumbai
 }
+
+export default configTest

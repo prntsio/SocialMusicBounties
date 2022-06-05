@@ -1,5 +1,6 @@
-import { gql } from '@apollo/client/core';
-import { subgraphClient } from "../app/services/MusicClient"
+import { gql } from "@apollo/client/core";
+import { getJsonWalletAddress } from "ethers/lib/utils";
+import { subgraphClient } from "../app/services/MusicClient";
 
 const QUERY = `
 {
@@ -15,13 +16,13 @@ const QUERY = `
 `;
 
 export type MusicNFT = {
-    id: string
-    sender: string
-    owner: string
-    tokenURI: string
-    tokenId: string
-    createdAt: string
-}
+  id: string;
+  sender: string;
+  owner: string;
+  tokenURI: string;
+  tokenId: string;
+  createdAt: string;
+};
 
 const request = () => {
   return subgraphClient.query({
@@ -29,8 +30,21 @@ const request = () => {
   });
 };
 
+export function getVideoURL(tokenURI: string): Promise<any> {
+  const url = "https://ipfs.io/ipfs/" + tokenURI.replace("ipfs://", "");
+  let data = fetch(url)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myJson) {
+      data = myJson;
+    });
+
+    return data;
+}
+
 export const musicNFTs = async (): Promise<MusicNFT[]> => {
   const result = await request();
-  console.log(result)
+  console.log(result);
   return result.data.musicNFTs;
 };
