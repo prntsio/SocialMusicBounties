@@ -31,10 +31,9 @@ const Profile: React.FC<Props> = (props: Props) => {
           <UserInfo />
         </Col>
         <Col xs={9}>
-          <Cards width={100} bounties={[]} music={[]} />
+          <BountyCards width={100}  bounties={bounties} music={[]}/>
         </Col>
       </Row>
-      <BountyCards width={50}  bounties={bounties} music={[]}/>
     </Container>
   );
 };

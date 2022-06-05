@@ -112,10 +112,10 @@ async function mintNft() {
   });
   console.log('exported to ipfs: ')
   console.log(ipfs)
-  return ipfs //todo
   const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl, config.nftAddress, owner);
   console.log('minted nft')
   const nftInfo = await minter.web3.getMintedNftInfo(tx);
   console.log(`minted NFT on contract ${nftInfo.contractAddress} with ID ${nftInfo.tokenId}`);
+  return ipfs //todo
   return nftInfo;
 }

@@ -4,7 +4,7 @@ import { Bounty } from './list-bounties';
 
 const QUERY = `
 query GetBounties($sender: String!) {
-  bounties(where: {sender: $sender} ) {
+  bounties(where: {sender: $sender}, orderBy: createdAt, orderDirection: desc ) {
     id
     bountyId
     sender
