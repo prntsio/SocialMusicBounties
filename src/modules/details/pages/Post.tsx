@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Image, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import polylogo from "../../../images/polygon.png";
 import Loading from "../../../shared/Loading";
@@ -11,7 +11,7 @@ import { useAccount, useContractWrite } from "wagmi";
 import config from '../../../config/config'
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
-import { mintNft } from "../../../utils/livepeer";
+import { mintNft, upload } from "../../../utils/livepeer";
 import { formatDistance, format } from "date-fns"
 
 interface Props { }
@@ -110,7 +110,7 @@ const Post: React.FC<Props> = (props: Props) => {
           {/* TODO: map actions with mode of setfinalFulfiller */}
             <Button variant="primary" onClick={() => {
               setFinalFulfiller({
-                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account})],
+                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account.address})],
                 // chainId: config.chainId
               })
             throw 'Not Implemented'
@@ -145,7 +145,7 @@ const Post: React.FC<Props> = (props: Props) => {
       {performedActions && performedActions.map(action => {
         console.log(action)
         return <div>
-          <text style={{color: "#11BB99"}}>{action.fulfiller}</text> <text>{"applied for this bounty. "}{formatDistance(new Date(), new Date(Number(bounty.createdAt) * 1000))}</text>
+          <span style={{color: "#11BB99"}}>{action.fulfiller}</span> <span>{"applied for this bounty. "}{formatDistance(new Date(), new Date(Number(bounty.createdAt) * 1000))}</span>
           { isOwner && <> 
             <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
               addFulfiller({
@@ -162,7 +162,26 @@ const Post: React.FC<Props> = (props: Props) => {
         console.log(a)
         return <div> a </div> 
       })}
-      <button onClick={() => mintNft()}>mintNft</button>
+      <button onClick={() => {
+        upload()
+        //mintNft()
+      }}>mintNft</button>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label as="legend" column sm={3}>File</Form.Label>
+        <Col>
+            <Form.Control
+                type="file"
+                required
+                name="file"
+                onChange={async (e : any) => {
+                  const file = e.target.files[0]
+                  // upload(file)
+                  const res = await mintNft(file)
+                  console.log(res)
+                }}
+            />
+        </Col>
+    </Form.Group>
     </ Container>
   );
 };
