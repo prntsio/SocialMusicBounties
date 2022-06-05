@@ -31,7 +31,7 @@ const BountyCardItem: React.FC<Props> = (props) => {
               <div>
                 <img
                   alt=""
-                  src={profile?.picture || lensLogo}
+                  src={profile?.picture?.original?.url || lensLogo}
                   width="35"
                   height="35"
                   className="d-inline-block"

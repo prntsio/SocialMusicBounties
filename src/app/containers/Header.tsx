@@ -42,7 +42,7 @@ function ProfileComponent() {
           <div>
             <img
               alt=""
-              src={profile?.picture || lensLogo}
+              src={profile?.picture?.original?.url || lensLogo}
               width="50"
               height="50"
               className="d-inline-block"
