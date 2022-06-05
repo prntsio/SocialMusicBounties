@@ -88,7 +88,7 @@ const Post: React.FC<Props> = (props: Props) => {
       <Row>
           <Col>
             <p style={{color: "#687684"}}>Bounty Created</p>
-            <p>{format(new Date(Number(bounty.createdAt) * 1000), "dd/MM/yyyy HH:mm")}</p>
+            <p>{format(new Date(Number(bounty.createdAt) * 1000), "MM/dd/yyyy HH:mm")}</p>
           </Col>
           <Col>
             <p style={{color: "#687684"}}>Number of Applicants</p>
@@ -105,18 +105,16 @@ const Post: React.FC<Props> = (props: Props) => {
             <p>{bounty.description}</p>
           </Col>
         </Row>
-        <div>
-          {isOwner && <> 
+        <div> <> 
           {/* TODO: map actions with mode of setfinalFulfiller */}
             <Button variant="primary" onClick={() => {
-              setFinalFulfiller({
-                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account.address})],
-                // chainId: config.chainId
+              addFulfiller({
+                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
               })
             throw 'Not Implemented'
-          }}>Approve</Button>
+          }}>Apply</Button>
           
-          </> }
+          </> 
           
           { <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
               acceptFulfillment({args: [account,bountyId,[account],"data"]})
@@ -148,8 +146,10 @@ const Post: React.FC<Props> = (props: Props) => {
           <span style={{color: "#11BB99"}}>{action.fulfiller}</span> <span>{"applied for this bounty. "}{formatDistance(new Date(), new Date(Number(bounty.createdAt) * 1000))}</span>
           { isOwner && <> 
             <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
-              addFulfiller({
-                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
+              
+              setFinalFulfiller({
+                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account.address})],
+                // chainId: config.chainId
               })
               throw 'Not Implemented'
             }} >Approve</Button>
@@ -158,10 +158,6 @@ const Post: React.FC<Props> = (props: Props) => {
         
       })}
       </>}
-      {performedActions && performedActions.map(a => {
-        console.log(a)
-        return <div> a </div> 
-      })}
       <button onClick={() => {
         upload()
         //mintNft()
