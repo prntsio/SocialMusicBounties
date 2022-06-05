@@ -29,11 +29,14 @@ const BountyCards: React.FC<Props> = (props) => {
             {props.bounties.map(bounty =>
                 <Container key={bounty.id} className={w}>
                     <Card>
-                        <Card.Header>{"user name"} {"@twitteraccount"}</Card.Header>
+                        <Card.Header>{"user name"} {bounty.id}</Card.Header>
                         <Card.Body>
                             <Card.Title>{bounty.title}</Card.Title>
                             <Card.Text>
                                 {bounty.description}
+                            </Card.Text>
+                            <Card.Text>
+                                {"Created by"} {bounty.sender}
                             </Card.Text>
                             <Stack className="justify-content-end" direction="horizontal" gap={3}>
                                 <Card.Text className="mt-3"> <Image src={polylogo} /> {bounty.bountyPrice} </Card.Text>
