@@ -9,7 +9,7 @@ const QUERY = `
     owner
     tokenURI
     tokenId
-    # createdAt
+    createdAt
   }
 }
 `;
@@ -20,7 +20,7 @@ export type MusicNFT = {
     owner: string
     tokenURI: string
     tokenId: string
-    // createdAt: string
+    createdAt: string
 }
 
 const request = () => {
