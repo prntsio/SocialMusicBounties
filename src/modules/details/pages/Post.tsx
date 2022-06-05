@@ -11,6 +11,7 @@ import { useAccount, useContractWrite } from "wagmi";
 import config from '../../../config/config'
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
+import { mintNft } from "../../../utils/livepeer";
 
 interface Props { }
 
@@ -21,7 +22,7 @@ const Post: React.FC<Props> = (props: Props) => {
   const [loaded, setLoaded] = useState(false)
   const { data: account} = useAccount();
   const sender = bounty && bounty.sender || '';
-  const isOwner = (account && account.address?.toLowerCase()) == (bounty && bounty.id.toLowerCase())
+  const isOwner = (account && account.address?.toLowerCase()) == (bounty && bounty.sender.toLowerCase())
   const isCompletePayment = false
   console.log(isOwner)
   console.log(account)
@@ -45,7 +46,7 @@ const Post: React.FC<Props> = (props: Props) => {
   },
     "performAction",
     {
-      // args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
+      args: [account && account.address,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account && account.address})],
       // chainId: config.chainId
     },
   )
@@ -85,7 +86,7 @@ const Post: React.FC<Props> = (props: Props) => {
       {bounty && <>
       <p></p>
       <h1>{bounty.title}</h1>
-      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.id}</span></p>
+      <p>Owned By <span style={{color: "#11BB99"}}>{isOwner ? "you" : bounty.sender}</span></p>
       <div style={{paddingLeft: 50}}>
       <Row>
           <Col>
@@ -122,10 +123,10 @@ const Post: React.FC<Props> = (props: Props) => {
           
           { <>
             <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
+              const f = JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})
               addFulfiller({
-                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
+                args: [account.address,bountyId,"asdf"],
               })
-              throw 'Not Implemented'
             }} >Apply</Button>
             <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
               acceptFulfillment({args: [account,bountyId,[account],"data"]})
@@ -152,6 +153,11 @@ const Post: React.FC<Props> = (props: Props) => {
         }
       </div>
       </>}
+      {performedActions && performedActions.map(a => {
+        console.log(a)
+        return <div> a </div> 
+      })}
+      <button onClick={() => mintNft()}>mintNft</button>
     </ Container>
   );
 };
