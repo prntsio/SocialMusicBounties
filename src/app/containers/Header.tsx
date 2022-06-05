@@ -72,7 +72,10 @@ const Header: React.FC<Props> = () => {
                                   padding: 5
                                 }}
                             />{' '}
-                            Bounties
+                            <text fontSize="50px" style={{fontWeight: 'bold'}} fontFamily="serif">
+                            PRNTS Bounties
+                            </text>
+                            
                         </Navbar.Brand>
                     </Link>
                     <Profile />
