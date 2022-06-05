@@ -66,7 +66,7 @@ const BountyCardItem: React.FC<Props> = (props) => {
               {formatDistance(
                 new Date(),
                 new Date(Number(props.bounty.createdAt) * 1000)
-              )}
+              )} {' ago'}
             </Card.Text>
           </Card.Body>
         </Card>
