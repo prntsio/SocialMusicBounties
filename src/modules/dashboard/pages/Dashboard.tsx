@@ -1,6 +1,6 @@
 import BountyCards from "../components/Cards";
 import PageTop from "../components/PageTop";
-import { useContractRead, useContractWrite } from "wagmi";
+import { useContractRead, useContractWrite, useAccount } from "wagmi";
 import config from "../../../config/config";
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
@@ -8,6 +8,7 @@ import { bounties as getBounties, Bounty } from '../../../repositories/list-boun
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
 import { toast } from 'react-toastify';
 import { MusicNFT, musicNFTs } from "../../../repositories/list-music-NFT";
+import { getProfile } from "../../../repositories/get-profiles";
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ interface Props {
 const Dashboard: React.FC<Props> = () => {
   const bountyId = 48
   const [bounties, setbounties] = useState<Bounty[]>([]);
+  const { data: account } = useAccount()
 
   const { data, isError, isLoading } = useContractRead({
         addressOrName: config.address,
@@ -129,11 +131,6 @@ const Dashboard: React.FC<Props> = () => {
     return (
         <>
             <PageTop />
-            {/* <button onClick={() => issueAndContribute()}> issueAndContribute</button>
-            <button onClick={() => addFulfiller()}> addFulfiller</button>
-            <button onClick={() => setFinalFulfiller()}> setFinalFulfiller</button>
-            <button onClick={() => fulfillBounty()}> fulfillBounty</button>
-            <button onClick={() => acceptFulfillment()}> acceptFulfillment</button> */}
             <BountyCards width={50}  bounties={bounties} music={music}/>
         </>
 
