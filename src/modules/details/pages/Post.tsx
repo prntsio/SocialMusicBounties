@@ -147,14 +147,16 @@ const Post: React.FC<Props> = (props: Props) => {
               style={{
                 
                 display:'block',
-                margin: 'auto',
+                margin: '50',
                 height: 720/2,
                 width: '100%',
+                marginBottom: 25
                 
               }}
               src={video || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
               allow="autoplay; encrypted-media; picture-in-picture"
             // sandbox="allow-scripts"
+           
               />
               
             </div>

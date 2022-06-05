@@ -1,6 +1,6 @@
 import BountyCards from "../components/Cards";
 import PageTop from "../components/PageTop";
-import { useContractRead, useContractWrite } from "wagmi";
+import { useContractRead, useContractWrite, useAccount } from "wagmi";
 import config from "../../../config/config";
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
@@ -16,7 +16,6 @@ interface Props {
 const Dashboard: React.FC<Props> = () => {
   const bountyId = 48
   const [bounties, setbounties] = useState<Bounty[]>([]);
-
   const { data, isError, isLoading } = useContractRead({
         addressOrName: config.address,
         contractInterface: bountyContract,
@@ -129,11 +128,6 @@ const Dashboard: React.FC<Props> = () => {
     return (
         <>
             <PageTop />
-            {/* <button onClick={() => issueAndContribute()}> issueAndContribute</button>
-            <button onClick={() => addFulfiller()}> addFulfiller</button>
-            <button onClick={() => setFinalFulfiller()}> setFinalFulfiller</button>
-            <button onClick={() => fulfillBounty()}> fulfillBounty</button>
-            <button onClick={() => acceptFulfillment()}> acceptFulfillment</button> */}
             <BountyCards width={50}  bounties={bounties} music={music}/>
         </>
 

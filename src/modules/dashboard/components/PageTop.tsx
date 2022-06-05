@@ -15,7 +15,9 @@ const BountyCards: React.FC<Props> = () => {
                         <Container>
                             <Row>
                                 <Col sm={9}>
-                                    <Card.Text   className="my-2">Timeline</Card.Text>
+
+                                    <Card.Text className="my-2">Bounty Timeline</Card.Text>
+
                                 </Col>
                                 <Col sm={3} className="justify-content-end">
                                     <Link  to="/create-bounty" >
