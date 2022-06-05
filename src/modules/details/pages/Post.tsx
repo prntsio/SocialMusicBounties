@@ -15,6 +15,7 @@ import { mintNft, upload } from "../../../utils/livepeer";
 import { formatDistance, format } from "date-fns"
 import { toast } from "react-toastify";
 import axios from "axios";
+import { fulfillment } from "../../../repositories/get-fulfillment";
 
 interface Props { }
 
@@ -30,6 +31,7 @@ const Post: React.FC<Props> = (props: Props) => {
   const isOwner = (account && account.address?.toLowerCase()) === (bounty && bounty.sender.toLowerCase())
   const isCompletePayment = bounty && bounty.nftHash
   const [video, setVideo] = useState<string>('');
+  const [isFulfilled, setIsFulfilled] = useState<boolean>(false);
   useEffect(() => {
     if (!(bounty && bounty.nftHash)) return;
     axios.get(bounty?.nftHash).then(res => {
@@ -48,6 +50,9 @@ const Post: React.FC<Props> = (props: Props) => {
         } else if (f[0]){
           const a : any = f[0]
           setFinalFulfiller1(a.finalFulfiller)
+          const res = await fulfillment(bountyId);
+          console.log(res)
+          setIsFulfilled(res.id)
         }
         setBounty(bounty)
         setLoaded(true)
@@ -125,7 +130,7 @@ const Post: React.FC<Props> = (props: Props) => {
         </Row>
         <div> <> 
           {/* TODO: map actions with mode of setfinalFulfiller */}
-            {!finalFulfiller1 && <Button variant="primary" onClick={() => {
+            {!finalFulfiller1 && !isFulfilled && <Button variant="primary" onClick={() => {
               addFulfiller({
                 args: [account.address,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
               })
@@ -178,7 +183,7 @@ const Post: React.FC<Props> = (props: Props) => {
                       }}
                       style={{marginBottom: 25}}
                   />}
-          { <Button variant="primary" disabled={account.address?.toLowerCase() != finalFulfiller1?.toLowerCase()} style={{marginLeft: 25}} onClick={() => {
+          {!isFulfilled && <Button variant="primary" disabled={account.address?.toLowerCase() != finalFulfiller1?.toLowerCase()} style={{marginLeft: 25}} onClick={() => {
               if (!nftHash) {
                 toast.error('Please upload a mp4 file')
                 return;
@@ -186,19 +191,20 @@ const Post: React.FC<Props> = (props: Props) => {
 
               fulfillBounty({args: [account.address,bountyId,[account.address],nftHash]})
             }}>Submit Work</Button>}
-          {isOwner && <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
-            throw 'Not Implemented'
+          {isOwner && !isFulfilled && <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
+            acceptFulfillment({args: [sender,bountyId,0,0,[ethers.utils.parseEther(bounty.bountyPrice)]]})
           }}>Complete Payment</Button>}
+          {isFulfilled && <div>This Bounty is fulfilled.</div>}
         </div>
         <p style={{marginTop: 20}}></p>
         {bounty.finalFulfiller && <>
-              <div>Data to be uploaded here</div>
+              <div>Data to be uploaded</div>
             </>}
-        { account != bounty.finalFulfiller ?
+        {/* { account != bounty.finalFulfiller ?
           <p >Awaiting person that made bounty to choose an applicant, maybe show list of applicants here</p> : <>
             <p>Show the approved applicant here</p>
           </>
-        }
+        } */}
       </div>
       <p><hr/></p>
       <h4>History</h4>
