@@ -8,7 +8,6 @@ import { bounties as getBounties, Bounty } from '../../../repositories/list-boun
 import React, { useEffect, useState, Dispatch, SetStateAction, } from "react";
 import { toast } from 'react-toastify';
 import { MusicNFT, musicNFTs } from "../../../repositories/list-music-NFT";
-import { getProfile } from "../../../repositories/get-profiles";
 interface Props {
     isLoggedIn: boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -17,8 +16,6 @@ interface Props {
 const Dashboard: React.FC<Props> = () => {
   const bountyId = 48
   const [bounties, setbounties] = useState<Bounty[]>([]);
-  const { data: account } = useAccount()
-
   const { data, isError, isLoading } = useContractRead({
         addressOrName: config.address,
         contractInterface: bountyContract,
