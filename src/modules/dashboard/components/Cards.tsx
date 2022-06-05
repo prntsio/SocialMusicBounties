@@ -46,7 +46,7 @@ const BountyCards: React.FC<Props> = (props) => {
                 <Card.Body>
                   <Card.Title>{"Music NFT minted" + getVideoURL(m.tokenURI)}</Card.Title>
                   <iframe
-                src={m.hash2 || "ipfs://bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
+                src={ "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
                 allow="autoplay; encrypted-media; picture-in-picture"
                 // sandbox="allow-scripts"
               ></iframe>
