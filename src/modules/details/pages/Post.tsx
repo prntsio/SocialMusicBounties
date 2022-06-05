@@ -109,9 +109,8 @@ const Post: React.FC<Props> = (props: Props) => {
           {/* TODO: map actions with mode of setfinalFulfiller */}
             <Button variant="primary" onClick={() => {
               addFulfiller({
-                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
+                args: [account.address,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
               })
-            throw 'Not Implemented'
           }}>Apply</Button>
           
           </> 
