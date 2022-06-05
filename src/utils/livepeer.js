@@ -35,7 +35,8 @@ export async function mintNft(file) {
   const ipfs = await minter.api.exportToIPFS(asset.id, nftMetadata, (progress) => {
     console.log(progress)
   });
-  console.log('exported to ipfs')
+  console.log('exported to ipfs: ')
+  console.log(ipfs)
   const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl);
   console.log('minted nft')
   const nftInfo = await minter.web3.getMintedNftInfo(tx);
