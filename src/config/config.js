@@ -1,5 +1,7 @@
 export const configProd = {
-  rpcUrl: ''
+  rpcUrl: 'https://polygon-mainnet.g.alchemy.com/v2/bdC_I5MH1DESDMZoehzrdPjOeGMCmYih',
+  address: '',
+  chainId: 137
 }
 
 const configTest = {

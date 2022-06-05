@@ -9,7 +9,7 @@ const apiOpts = {
 const provider = new providers.AlchemyProvider(config.chainId, 'I4KCixYGLCmDLITHwE6eL0NE9HEIpb60');
 const minter = new videonft.minter.FullMinter(apiOpts, { ethereum: provider, chainId: config.chainId });
 
-export async function upload (file) {
+export async function upload (file, owner) {
   // const file = await minter.uploader.pickFile();
   let asset = await minter.api.createAsset('My NFT', file);
   console.log(asset)
@@ -112,7 +112,7 @@ async function mintNft() {
   });
   console.log('exported to ipfs: ')
   console.log(ipfs)
-  const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl);
+  const tx = await minter.web3.mintNft(ipfs.nftMetadataUrl, config.address, config.owner);
   console.log('minted nft')
   const nftInfo = await minter.web3.getMintedNftInfo(tx);
   console.log(`minted NFT on contract ${nftInfo.contractAddress} with ID ${nftInfo.tokenId}`);
