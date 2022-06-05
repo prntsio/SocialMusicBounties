@@ -23,7 +23,8 @@ const BountyCards: React.FC<Props> = (props) => {
   useEffect(() => {
     const fetchIPFSArray = async () => {
       const f = props.music.map<any>(async m => {
-        return {...m, hash2: JSON.parse(await getFromIPFS(m.tokenURI.replace("ipfs://", ""))).properties.video.replace("ipfs://","")}
+        const mJson = JSON.parse(await getFromIPFS(m.tokenURI.replace("ipfs://", "")))
+        return {...m, hash2: mJson.properties.video.replace("ipfs://",""),name: mJson.name}
       })
      
       return Promise.all(f).then(pmusic => {
@@ -40,16 +41,25 @@ const BountyCards: React.FC<Props> = (props) => {
       {processedMusic && processedMusic.map((m : any) => <Container key={m.id} className={w}>
               <Card>
                 <Card.Header>
-                  {"Submitted by"}{" "}
-                  <text style={{ color: "#11BB99" }}>{m.sender}</text>
+                  <Card.Title>{m.name}</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Title>{"Music NFT minted" + getVideoURL(m.tokenURI)}</Card.Title>
-                  <iframe
-                src={("https://ipfs.io/ipfs/" + m.hash2) || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                // sandbox="allow-scripts"
-              ></iframe>
+                  <div style={{marginBottom: 20}}>
+                    <span >{"Submitted by"}{" "}</span>
+                    <span style={{ color: "#11BB99" }}>{m.sender}</span>
+                  </div>
+                  <div style={{margin: 'auto'}}>
+                    <iframe
+                    style={{
+                      display:'block',
+                      height: 1100/2,
+                      width: 650/2,
+                    }}
+                    src={("https://ipfs.io/ipfs/" + m.hash2) || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                  // sandbox="allow-scripts"
+                    />
+                  </div>
               <Card.Text>
                     {formatDistance(
                       new Date(),
