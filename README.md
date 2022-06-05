@@ -1,46 +1,29 @@
-# Getting Started with Create React App
+[WEB SITE :globe_with_meridians:](https://social-music-bounties-snowy.vercel.app/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# PRNTS
 
-## Available Scripts
+A DECENTRALIZED SOSICAL PLATFORM FOR ARTISTS.
 
-In the project directory, you can run:
 
-### `yarn start`
+![56407616_594359747698553_7198270350923137024_n](https://user-images.githubusercontent.com/4179632/172065255-d84cd85b-b7f9-4e22-b8d4-3751535ac08b.jpg)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Inspiration
+A lack of web3 tools for independent artists to build and monetize their following.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## What it does
+Enable artists to earn revenue and gain exposure in new markets through collaboration opportunities.
 
-### `yarn test`
+## How we built it
+We modified the smart contracts to fit our needs and connected them to the react front end.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Challenges we ran into
+Connecting the smart contracts to our front end.
 
-### `yarn build`
+## Accomplishments that we're proud of
+Assembling a team of strangers via The Graph discord chat.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## What we learned
+Through a little ingenuity, hard work, and determination a team of strangers can hack together a product that solves a major pain point in the independent music artist ecosystem.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## What's next for PRNTS
+Continue to build a more robust PRNTS platform for musicians and implement our 3 collaboration pillars: social bounties (from the Graph hack), project investments (already built) and b.trax (for producers to organize who they've sent beats to).
