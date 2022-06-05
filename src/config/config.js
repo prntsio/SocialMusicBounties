@@ -1,6 +1,7 @@
-export default configTest
 export const configProd = {
-  rpcUrl: ''
+  rpcUrl: 'https://polygon-mainnet.g.alchemy.com/v2/bdC_I5MH1DESDMZoehzrdPjOeGMCmYih',
+  address: '',
+  chainId: 137
 }
 
 const configTest = {
@@ -8,3 +9,5 @@ const configTest = {
   address: '0x8E0e3C37fD7D8EAE1D928ceB343d6339e7B7B48C',
   chainId: 80001,//polygon mumbai
 }
+
+export default configTest

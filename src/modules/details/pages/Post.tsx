@@ -176,8 +176,11 @@ const Post: React.FC<Props> = (props: Props) => {
                 onChange={async (e : any) => {
                   const file = e.target.files[0]
                   // upload(file)
-                  const res = await mintNft(file)
-                  console.log(res)
+                  try {
+                    const res = await mintNft(file)
+                  } catch (e) {
+                    console.error(e)
+                  }
                 }}
             />
         </Col>
