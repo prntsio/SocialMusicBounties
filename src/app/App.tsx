@@ -32,10 +32,10 @@ const success = () => {
 
   return (
     <div>
-      <button onClick={loading}>Loading !</button>
+      {/* <button onClick={loading}>Loading !</button>
       <button onClick={dismissAll}>Stop Loading !</button>
       <button onClick={error}>Error !</button>
-      <button onClick={success}>Success !</button>
+      <button onClick={success}>Success !</button> */}
       <ToastContainer
 position="bottom-right"
 autoClose={5000}
