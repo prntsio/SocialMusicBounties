@@ -83,7 +83,7 @@ const BountyCards: React.FC<Props> = (props) => {
           <Card>
             <Card.Header>
               {"Owned by"}{" "}
-              <text style={{ color: "#11BB99" }}>{bounty.sender}</text>
+              <span style={{ color: "#11BB99" }}>{bounty.sender}</span>
             </Card.Header>
             <Card.Body>
               <Card.Title>{bounty.title}</Card.Title>
