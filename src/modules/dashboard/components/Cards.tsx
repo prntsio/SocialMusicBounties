@@ -23,7 +23,7 @@ const BountyCards: React.FC<Props> = (props) => {
   useEffect(() => {
     const fetchIPFSArray = async () => {
       const f = props.music.map<any>(async m => {
-        return {...m, hash2: JSON.parse(await getFromIPFS(m.tokenURI.replace("ipfs://", ""))).properties.video}
+        return {...m, hash2: JSON.parse(await getFromIPFS(m.tokenURI.replace("ipfs://", ""))).properties.video.replace("ipfs://","")}
       })
      
       return Promise.all(f).then(pmusic => {
@@ -46,7 +46,7 @@ const BountyCards: React.FC<Props> = (props) => {
                 <Card.Body>
                   <Card.Title>{"Music NFT minted" + getVideoURL(m.tokenURI)}</Card.Title>
                   <iframe
-                src={ "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
+                src={("https://ipfs.io/ipfs/" + m.hash2) || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
                 allow="autoplay; encrypted-media; picture-in-picture"
                 // sandbox="allow-scripts"
               ></iframe>
