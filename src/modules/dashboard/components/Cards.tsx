@@ -45,20 +45,29 @@ const BountyCards: React.FC<Props> = (props) => {
                 </Card.Header>
                 <Card.Body>
                   <div style={{marginBottom: 20}}>
+                    
                     <span >{"Submitted by"}{" "}</span>
                     <span style={{ color: "#11BB99" }}>{m.sender}</span>
+                   
                   </div>
+
+                  
                   <div style={{margin: 'auto'}}>
+                    
                     <iframe
                     style={{
+                      
                       display:'block',
-                      height: 1100/2,
-                      width: 650/2,
+                      margin: 'auto',
+                      height: 720/2,
+                      width: 1280/2,
+                      
                     }}
                     src={("https://ipfs.io/ipfs/" + m.hash2) || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
                     allow="autoplay; encrypted-media; picture-in-picture"
                   // sandbox="allow-scripts"
                     />
+                    
                   </div>
               <Card.Text>
                     {formatDistance(
