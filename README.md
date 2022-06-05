@@ -1,4 +1,4 @@
-[WEB SITE](https://social-music-bounties-snowy.vercel.app/)
+[WEB SITE :globe_with_meridians:](https://social-music-bounties-snowy.vercel.app/)
 
 # PRNTS
 
