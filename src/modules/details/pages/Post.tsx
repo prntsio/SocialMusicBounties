@@ -14,6 +14,7 @@ import { ethers } from "ethers";
 import { mintNft, upload } from "../../../utils/livepeer";
 import { formatDistance, format } from "date-fns"
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface Props { }
 
@@ -28,6 +29,13 @@ const Post: React.FC<Props> = (props: Props) => {
   const sender = bounty && bounty.sender || '';
   const isOwner = (account && account.address?.toLowerCase()) === (bounty && bounty.sender.toLowerCase())
   const isCompletePayment = bounty && bounty.nftHash
+  const [video, setVideo] = useState<string>('');
+  useEffect(() => {
+    if (!(bounty && bounty.nftHash)) return;
+    axios.get(bounty?.nftHash).then(res => {
+      setVideo(res.data.external_url)
+    })
+  }, [isCompletePayment])
   useEffect(() => {
     (async () => {
       if (bountyId) {
@@ -139,7 +147,7 @@ const Post: React.FC<Props> = (props: Props) => {
                 width: '100%',
                 
               }}
-              src={"https://ipfs.io/ipfs/bafybeigoxp3catcvmkmolbrroqg3uyrg3pj6edyu645ve4qfuwvslhoomi" ||"https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
+              src={video || "https://ipfs.io/ipfs/bafybeicqizo3dfwy7smo6xz57ryfu57vam52eki5ai6sgfusfmqpyg4ddy"}
               allow="autoplay; encrypted-media; picture-in-picture"
             // sandbox="allow-scripts"
               />
