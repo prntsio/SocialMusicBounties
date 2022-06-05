@@ -11,6 +11,7 @@ import { useAccount, useContractWrite } from "wagmi";
 import config from '../../../config/config'
 import bountyContract from '../../../abis/TestContract.json'
 import { ethers } from "ethers";
+import { formatDistance, format } from "date-fns"
 
 interface Props { }
 
@@ -21,12 +22,8 @@ const Post: React.FC<Props> = (props: Props) => {
   const [loaded, setLoaded] = useState(false)
   const { data: account} = useAccount();
   const sender = bounty && bounty.sender || '';
-  const isOwner = (account && account.address?.toLowerCase()) == (bounty && bounty.id.toLowerCase())
+  const isOwner = (account && account.address?.toLowerCase()) === (bounty && bounty.id.toLowerCase())
   const isCompletePayment = false
-  console.log(isOwner)
-  console.log(account)
-  console.log(bounty && bounty.id)
-  console.log(bounty && bounty.id == (account && account.address))
   useEffect(() => {
     (async () => {
       if (bountyId) {
@@ -85,12 +82,12 @@ const Post: React.FC<Props> = (props: Props) => {
       {bounty && <>
       <p></p>
       <h1>{bounty.title}</h1>
-      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.id}</span></p>
+      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.sender}</span></p>
       <div style={{paddingLeft: 50}}>
       <Row>
           <Col>
             <p style={{color: "#687684"}}>Bounty Created</p>
-            <p>Block: {bounty.createdAt}</p>
+            <p>{format(new Date(Number(bounty.createdAt) * 1000), "dd/MM/yyyy HH:mm")}</p>
           </Col>
           <Col>
             <p style={{color: "#687684"}}>Number of Applicants</p>
@@ -120,17 +117,9 @@ const Post: React.FC<Props> = (props: Props) => {
           
           </> }
           
-          { <>
-            <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
-              addFulfiller({
-                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
-              })
-              throw 'Not Implemented'
-            }} >Apply</Button>
-            <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
+          { <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
               acceptFulfillment({args: [account,bountyId,[account],"data"]})
-            }}>Submit Work</Button>
-          </>}
+            }}>Submit Work</Button>}
           {isOwner && <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
             throw 'Not Implemented'
           }}>Complete Payment</Button>}
@@ -151,6 +140,23 @@ const Post: React.FC<Props> = (props: Props) => {
           </>
         }
       </div>
+      <p><hr/></p>
+      {performedActions && performedActions.map(action => {
+        console.log(action)
+        return <div>
+          <text style={{color: "#11BB99"}}>{action.fulfiller}</text> <text>{"fulfilled this bounty. "}</text>
+          { isOwner && <> 
+            <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
+              addFulfiller({
+                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account.address})],
+              })
+              throw 'Not Implemented'
+            }} >Approve</Button>
+          </>}
+            <text>{formatDistance(new Date(), new Date(Number(bounty.createdAt) * 1000))}</text>
+        </div>
+        
+      })}
       </>}
     </ Container>
   );
