@@ -21,10 +21,12 @@ const Post: React.FC<Props> = (props: Props) => {
   const [loaded, setLoaded] = useState(false)
   const { data: account} = useAccount();
   const sender = bounty && bounty.sender || '';
-  const isOwner = sender == account
+  const isOwner = (account && account.address?.toLowerCase()) == (bounty && bounty.id.toLowerCase())
   const isCompletePayment = false
- const applicant = account
-
+  console.log(isOwner)
+  console.log(account)
+  console.log(bounty && bounty.id)
+  console.log(bounty && bounty.id == (account && account.address))
   useEffect(() => {
     (async () => {
       if (bountyId) {
@@ -43,7 +45,7 @@ const Post: React.FC<Props> = (props: Props) => {
   },
     "performAction",
     {
-      args: [applicant,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: applicant})],
+      // args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
       // chainId: config.chainId
     },
   )
@@ -61,7 +63,7 @@ const Post: React.FC<Props> = (props: Props) => {
   },
     "fulfillBounty",
     {
-      args: [applicant,bountyId,[applicant],"data"],
+      args: [account,bountyId,[account],"data"],
       // chainId: config.chainId
     },
   )
@@ -83,12 +85,12 @@ const Post: React.FC<Props> = (props: Props) => {
       {bounty && <>
       <p></p>
       <h1>{bounty.title}</h1>
-      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.sender}</span></p>
+      <p>Owned By <span style={{color: "#11BB99"}}>{bounty.id}</span></p>
       <div style={{paddingLeft: 50}}>
       <Row>
           <Col>
-            <p style={{color: "#687684"}}>Bounty Created DATE HERE</p>
-            <p></p>
+            <p style={{color: "#687684"}}>Bounty Created</p>
+            <p>Block: {bounty.createdAt}</p>
           </Col>
           <Col>
             <p style={{color: "#687684"}}>Number of Applicants</p>
@@ -97,7 +99,7 @@ const Post: React.FC<Props> = (props: Props) => {
         </Row>
         <Row>
           <Col>
-            <p style={{color: "#687684"}}>Current Price</p>
+            <p style={{color: "#687684"}}>Current Bounty Reward</p>
             <p> <Image src={polylogo} /> {bounty.bountyPrice}</p>
           </Col>
           <Col>
@@ -105,33 +107,38 @@ const Post: React.FC<Props> = (props: Props) => {
             <p>{bounty.description}</p>
           </Col>
         </Row>
-        {isOwner && <> 
-        {/* TODO: map actions with mode of setfinalFulfiller */}
-          <Button variant="primary" onClick={() => {
-            setFinalFulfiller({
-              args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account})],
-              // chainId: config.chainId
-            })
-          throw 'Not Implemented'
-        }}>Approve</Button>
-        <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
-          throw 'Not Implemented'
-        }}>Complete Payment</Button>
-        </> }{ <>
-          <Button variant="primary" onClick={() => {
-            addFulfiller({
-              args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
-            })
+        <div>
+          {isOwner && <> 
+          {/* TODO: map actions with mode of setfinalFulfiller */}
+            <Button variant="primary" onClick={() => {
+              setFinalFulfiller({
+                args: [sender,bountyId,JSON.stringify({mode: 'setfinalFulfiller', finalFulfiller: account})],
+                // chainId: config.chainId
+              })
             throw 'Not Implemented'
-          }}>Apply</Button>
-          {bounty.finalFulfiller && <>
-            <div>Data to be uploaded here</div>
+          }}>Approve</Button>
+          
+          </> }
+          
+          { <>
+            <Button variant="primary" style={{marginLeft: 25}} onClick={() => {
+              addFulfiller({
+                args: [account,bountyId,JSON.stringify({mode: 'addFulfiller', fulfillerToAdd: account})],
+              })
+              throw 'Not Implemented'
+            }} >Apply</Button>
+            <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
+              acceptFulfillment({args: [account,bountyId,[account],"data"]})
+            }}>Submit Work</Button>
           </>}
-          <Button variant="primary" disabled={account != bounty.finalFulfiller} style={{marginLeft: 25}} onClick={() => {
-            acceptFulfillment({args: [applicant,bountyId,[applicant],"data"]})
-          }}>Submit Work</Button>
-        </>}
+          {isOwner && <Button variant="primary" disabled={!isCompletePayment} style={{marginLeft: 25}} onClick={() => {
+            throw 'Not Implemented'
+          }}>Complete Payment</Button>}
+        </div>
         <p style={{marginTop: 20}}></p>
+        {bounty.finalFulfiller && <>
+              <div>Data to be uploaded here</div>
+            </>}
         { !isCompletePayment ?
           <p >You can complete payment when the approved applicant has submitted the work</p> : <>
             Applicant's submitted demo here

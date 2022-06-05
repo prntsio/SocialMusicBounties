@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Dashboard: React.FC<Props> = () => {
-  const bountyId = 26
+  const bountyId = 48
   const [bounties, setbounties] = useState<Bounty[]>([]);
 
   const { data, isError, isLoading } = useContractRead({
@@ -39,7 +39,7 @@ const Dashboard: React.FC<Props> = () => {
       "issueAndContribute",
       {
         args: [sender,[sender],[sender],JSON.stringify({
-          title: 'Brazilian Musicv3', 
+          title: 'Brazilian Musicv4', 
           type: 'Feature', 
           nftHash: 'fakeHash', 
           contributersType: 'one', 
@@ -50,9 +50,9 @@ const Dashboard: React.FC<Props> = () => {
           estimatedTime:100, 
           bountyPrice: 100, //bountyPrice doesn't
           paymentDue: 1
-        }),2528821098,"0x0000000000000000000000000000000000000000",0,ethers.utils.parseEther("0.1")],
+        }),2528821098,"0x0000000000000000000000000000000000000000",0,ethers.utils.parseEther("0.001")],
         overrides: {
-          value: ethers.utils.parseEther("0.1")
+          value: ethers.utils.parseEther("0.001")
         }
         // chainId: config.chainId
       },
@@ -129,11 +129,11 @@ const Dashboard: React.FC<Props> = () => {
     return (
         <>
             <PageTop />
-            <button onClick={() => issueAndContribute()}> issueAndContribute</button>
+            {/* <button onClick={() => issueAndContribute()}> issueAndContribute</button>
             <button onClick={() => addFulfiller()}> addFulfiller</button>
             <button onClick={() => setFinalFulfiller()}> setFinalFulfiller</button>
             <button onClick={() => fulfillBounty()}> fulfillBounty</button>
-            <button onClick={() => acceptFulfillment()}> acceptFulfillment</button>
+            <button onClick={() => acceptFulfillment()}> acceptFulfillment</button> */}
             <BountyCards width={50}  bounties={bounties} music={music}/>
         </>
 

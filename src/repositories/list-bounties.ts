@@ -2,7 +2,7 @@ import { gql } from '@apollo/client/core';
 import { subgraphClient } from "../app/services/SubgraphApolloClient"
 const QUERY = `
 {
-  bounties {
+  bounties (orderBy: createdAt, orderDirection: desc) {
     id
     bountyId
     sender
