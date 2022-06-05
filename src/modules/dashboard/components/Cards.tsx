@@ -23,7 +23,20 @@ const BountyCards: React.FC<Props> = (props) => {
 
     return (
         <>
-            {props.music.map(music => <div key={music.id}>tokenURI: {music.tokenURI}</div>)}
+            {props.music.map(music => 
+                //<div key={music.id}>tokenURI: {music.tokenURI}</div>
+                <Container key={music.id} className={w}>
+                    <Card>
+                        <Card.Header>{"Submission Video"} <text style={{color: "#11BB99"}}>{music.tokenURI}</text></Card.Header>
+                        <Card.Body>
+                            <Card.Title>
+                                {"Submission Owner: " + music.id}
+                            </Card.Title>
+                            
+                        </Card.Body>
+                    </Card>
+                </Container>
+                )}
             {props.bounties.map(bounty =>
                 <Container key={bounty.id} className={w}>
                     <Card>
