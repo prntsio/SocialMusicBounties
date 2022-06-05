@@ -52,7 +52,9 @@ const Post: React.FC<Props> = (props: Props) => {
           setFinalFulfiller1(a.finalFulfiller)
           const res = await fulfillment(bountyId);
           console.log(res)
-          setIsFulfilled(res.id)
+          if(res) {
+            setIsFulfilled(res.id)
+          } 
         }
         setBounty(bounty)
         setLoaded(true)
