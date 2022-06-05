@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import polylogo from "../../../images/polygon.png";
 import { Bounty } from '../../../repositories/list-bounties'
 import { MusicNFT } from "../../../repositories/list-music-NFT";
-import { formatDistance, format } from "date-fns"
+import { formatDistance } from "date-fns"
 interface Props {
     width: number;
     bounties: Bounty[];
@@ -27,7 +27,7 @@ const BountyCards: React.FC<Props> = (props) => {
             {props.bounties.map(bounty =>
                 <Container key={bounty.id} className={w}>
                     <Card>
-                        <Card.Header>{"Owned by"} {bounty.sender}</Card.Header>
+                        <Card.Header>{"Owned by"} <text style={{color: "#11BB99"}}>{bounty.sender}</text></Card.Header>
                         <Card.Body>
                             <Card.Title>{bounty.title}</Card.Title>
                             <Card.Text>
